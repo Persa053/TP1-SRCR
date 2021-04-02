@@ -17,6 +17,7 @@
 :- dynamic medico/5.
 :- dynamic enfermeiro/5.
 :- dynamic ano/1.
+:- dynamic faseVacinacao/2.
 
 % Ano atual
 ano(2021).
@@ -247,15 +248,17 @@ enfermeiro(20,'Diana Vieira',39,'F',20).
 %1a fase 1 Vacinacao
 
 
-faseVacinacao(1, utente(ID,_,_,Idade,_,_,_,_,_)) :- ano(Y), R is (Y-Idade),  R > 85.
-faseVacinacao(1, utente(ID,_,_,_,_,_,_,medico,_)).
-faseVacinacao(1, utente(ID,_,_,_,_,_,_,medica,_)).
-faseVacinacao(1, utente(ID,_,_,_,_,_,_,enfermeiro,_)).
-faseVacinacao(1, utente(ID,_,_,_,_,_,_,enfermeira,_)).
-faseVacinacao(1, utente(ID,_,_,_,_,_,_,_,Doencas)) :- length(Doencas, R), R > 0.
+%faseVacinacao(1, utente(ID,_,_,Idade,_,_,_,_,_)) :- ano(Y), Y-Idade > 85, !, true.
+%faseVacinacao(1, utente(ID,_,_,_,_,_,_,medico,_)):- !, true.
+%faseVacinacao(1, utente(ID,_,_,_,_,_,_,medica,_)):- !, true.
+%faseVacinacao(1, utente(ID,_,_,_,_,_,_,enfermeiro,_)):- !, true.
+%faseVacinacao(1, utente(ID,_,_,_,_,_,_,enfermeira,_)):- !, true.
+%faseVacinacao(1, utente(ID,_,_,_,_,_,_,_,Doencas)) :- length(Doencas, R), R > 0, !,true.
 
-listaFase(1,Us) :- findall(1, faseVacinacao(1,U), Us).
 
+listaDoentesRisco(IDs) :- findall(ID, (utente(ID,_,_,_,_,_,_,_,Doencas), length(Doencas, R), R > 0), IDs).
+listaVelhos(IDs) :- findall(ID, (utente(ID,_,_,Idade,_,_,_,_,_), ano(Y), Y-Idade > 85), IDs).
+listaMedico(IDs) :- findall(ID, utente(ID,_,_,_,_,_,_,medico,_), IDs).
 
 
 % fase2Vacincacao: #IdEnfermeiro,Nome,Idade,Género,#CentroSaude -> {V,F}
