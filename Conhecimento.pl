@@ -39,7 +39,7 @@ utente(17, 337462863, 'Dalila Pavao', 1965, 'dalilapavao@gmail.com', 937593746, 
 utente(18, 163874673, 'Manuela Rodrigues', 1977, 'manuelarodrigues@gmail.com', 912847562, guimaraes, policia, []).
 utente(19, 098475833, 'Jose Soares', 1989, 'josesoaresvilela@gmail.com', 937264839, faro, padeirx, []).
 utente(20, 763487435, 'Luis Veloso', 1978, 'luisveloso@gmail.com', 927465839, aveiro, marinheirx, []).
-
+utente(21, 712345325, 'Mickey Mouse', 2000, 'whatever@gmail.com', 912344539, ruilhe, prostitutx, []).
 
 
 %---------------------------------------------------------------------
@@ -136,7 +136,7 @@ vacinacao(20,4,18,02,2021, pfizer, 2).
 vacinacao(28,7,25,01,2022, astraZeneca, 2).
 vacinacao(9,6,13,02,2022, astraZeneca, 1).
 vacinacao(35,15,07,01,2022, pfizer, 1).
-
+vacinacao(2,21,07,01,2021, pfizer, 1).
 %---------------------------------------------------------------------
 %-------- MedicoFamilia ----------------------------------------------
 %---------------------------------------------------------------------
