@@ -116,26 +116,26 @@ staff(36, 20, 'Filipa Trindade', 'filipatrindade@gmail.com').
 %---------------------------------------------------------------------
 %vacinação_Covid: #Staf, #utente, Dia, Mes,Ano, Vacina, Toma↝ { 𝕍, 𝔽 }
 
-vacinacao(8,12,23,03,2021, pfizer, 0).
-vacinacao(24,8,01,04,2021, pfizer, 1).
-vacinacao(13,2,20,04,2021, pfizer, 0).
-vacinacao(1,1,02,05,2021, astraZeneca, 2).
+vacinacao(8,12,23,03,2021, pfizer, 1).
+vacinacao(24,8,01,04,2021, pfizer, 2).
+vacinacao(13,2,20,04,2021, pfizer, 1).
+vacinacao(1,1,02,05,2021, astraZeneca, 1).
 vacinacao(6,16,31,05,2021, pfizer, 1).
-vacinacao(25,13,29,06,2021, pfizer, 1).
-vacinacao(34,14,20,06,2021, astraZeneca, 0).
-vacinacao(31,17,19,07,2021, pfizer, 1).
-vacinacao(10,18,21,07,2021, astraZeneca, 2).
-vacinacao(35,20,13,08,2021, pfizer, 0).
-vacinacao(4,3,31,09,2021, pfizer, 0).
-vacinacao(36,10,05,09,2021, pfizer, 0).
-vacinacao(26,5,09,10,2021, pfizer, 1).
-vacinacao(33,19,21,11,2021, astraZeneca, 0).
-vacinacao(12,11,26,12,2021, astraZeneca, 1).
-vacinacao(32,9,30,01,2021, pfizer, 1).
-vacinacao(20,4,18,02,2021, pfizer, 1).
-vacinacao(28,7,25,01,2022, astraZeneca, 1).
-vacinacao(9,6,13,02,2022, astraZeneca, 2).
-vacinacao(35,15,07,01,2022, pfizer, 2).
+vacinacao(25,13,29,06,2021, pfizer, 2).
+vacinacao(34,14,20,06,2021, astraZeneca, 1).
+vacinacao(31,17,19,07,2021, pfizer, 2).
+vacinacao(10,18,21,07,2021, astraZeneca, 1).
+vacinacao(35,20,13,08,2021, pfizer, 1).
+vacinacao(4,3,31,09,2021, pfizer, 1).
+vacinacao(36,10,05,09,2021, pfizer, 1).
+vacinacao(26,5,09,10,2021, pfizer, 2).
+vacinacao(33,19,21,11,2021, astraZeneca, 1).
+vacinacao(12,11,26,12,2021, astraZeneca, 2).
+vacinacao(32,9,30,01,2021, pfizer, 2).
+vacinacao(20,4,18,02,2021, pfizer, 2).
+vacinacao(28,7,25,01,2022, astraZeneca, 2).
+vacinacao(9,6,13,02,2022, astraZeneca, 1).
+vacinacao(35,15,07,01,2022, pfizer, 1).
 
 %---------------------------------------------------------------------
 %-------- MedicoFamilia ----------------------------------------------
