@@ -13,12 +13,10 @@
 :- op( 900,xfy,'::' ).
 :- dynamic faseVacinacao/2.
 :- dynamic data/3.
-
+:- use_module(conhecimento).
 
 % Data atual
 dataA(4,4,2021).
-
-%solucoes(T,Q,S) :- findall(T,Q,S).
 
 solucoes(X, XS, _) :- XS, assert(tmp(X)), fail.
 solucoes(_, _, R) :- solucoesAux([], R).
@@ -26,19 +24,10 @@ solucoes(_, _, R) :- solucoesAux([], R).
 solucoesAux(L, R) :- retract(tmp(X)), !, solucoesAux([X|L], R).
 solucoesAux(R, R).
 
-
-
-evolucao( Termo ) :-
-  solucoes( Invariante,+Termo::Invariante,Lista ),
-    insercao( Termo ),
-      teste( Lista ).
-
-insercao( Termo) :-
-        assert( Termo ).
-insercao( Termo) :-
-        retract( Termo ),!,fail.
-
-
+%#AInesÉFixe%%%%%evolucao( Termo ) :-
+%#AInesÉFixe%%%%%  solucoes( Invariante,+Termo::Invariante,Lista ),--------------------------------------------------------------------------------------------------------------------------
+%#AInesÉFixe%%%%%    insercao( Termo ),
+%#AInesÉFixe%%%%%      teste( Lista ).
 
 % fase1Vacincacao: #IdEnfermeiro,Nome,Idade,Género,#CentroSaude -> {V,F}
 %1a fase 1 Vacinacao
@@ -71,11 +60,10 @@ listafaseVacinacao1(IDs) :- listaEnfermeirxV(E),
                             concat(E, Y, X),
                             repRemove(X, Xs),
                             ordena(Xs, IDs).
+
 %---------------------------------------------------------------------
 % Identifica todos os eleitos para a segunda fase de vacinaçao; listafaseVacinacao2(lista de IDs de utentes). -> {V,F}
 listafaseVacinacao2(IDs) :- findall(ID, (listafaseVacinacao1(Xs), utente(ID,_,_,_,_,_,_,_,_), nao(pertence(ID, Xs))), IDs).
-
-
 
 %---------------------------------------------------------------------
 % Identificar utentes/centrosaude/staff por critérios de seleção
@@ -189,44 +177,31 @@ enfermeiroGenero(G, R) :- solucoes(enfermeiro(Id,N,I,G,Cs), enfermeiro(Id,N,I,G,
 enfermeiroCservico(Cs, R) :- solucoes(enfermeiro(Id,N,I,G,Cs), enfermeiro(Id,N,I,G,Cs), R).
 
 
-
-
-
-
-
-
-
-
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Faz a insercao de conhecimento
 % Extensao predicado que permite a evolucao conhecimento: Termo - {V,F}
 
+evolucao( Termo ) :- findall(Invariante, +Termo::Invariante, Lista),
+                     insercao( Termo ),
+                     teste( Lista ).
 
+insercao( Termo ) :- assert( Termo ).
+insercao( Termo ) :- retract( Termo ), !, fail.
 
+teste( [] ).
+teste( [R|LR] ) :- R, teste( LR ).
 
-
-
-
-
-
-
-
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Faz a removoção de conhecimento
 % Extensão predicado que permite a involucao conhecimento: Termo - {V,F}
 
 
-%involucao( Termo ) :-
-%        solucoes( Invariante, -Termo::Invariante, Lista ),
-%         remocao( Termo ),
-%        teste( Lista ).
+involucao( Termo ) :- solucoes( Invariante, -Termo::Invariante, Lista ),
+                      remocao( Termo ),
+                      teste( Lista ).
 
-%remocao( Termo ):-
-%        retract( Termo ).
-%remocao( Termo ):-
-%        assert( Termo ),!,fail.
+remocao( Termo ) :- retract( Termo ).
+remocao( Termo ) :- assert( Termo ),!,fail.
 
 %Permitir a definição de fases de vacinação, definindo critérios de inclusão de utentes nas diferentes fases (e.g., doenças crónicas, idade, profissão);
 
@@ -301,9 +276,11 @@ peepsNoVacFutura(R) :- findall(ID,
                                 peepsNoVac(X),
                                 pertence(ID,X),
                                 peepsVac1Futura(Y),
-                                nao(pertence(ID,Y))),
-                         X),
-                 ordena(X, R).
+                                nao(pertence(ID,Y)),
+                                peepsVac2Futura(Z),
+                                nao(pertence(ID,Z))),
+                         A),
+                 ordena(A, R).
 
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas vacianadas indevidamente; indevidamente(lista de IDs de utentes). -> {V,F}
@@ -314,15 +291,16 @@ indevidamente(R) :- findall(ID,
                                       listafaseVacinacao1(F1),
                                       nao(pertence(ID, F1)),
                                       nao(verifica2toma(F1))),
-                                   X),
+                                   Y),
+                           repRemove(Y, X),
                            ordena(X, R).
 
 %---------------------------------------------------------------------
-% Identificar IDs de pessoas não vacinadas nenhuma vez e cadidatas à primeira fase; candidatosFase1(lista de IDs de utentes). -> {V,F}
+% Identificar IDs de pessoas não vacinadas nenhuma vez e candidatas à primeira fase; candidatosFase1(lista de IDs de utentes). -> {V,F}
 candidatosFase1(R) :- findall(ID,
                                       (utente(ID,_,_,_,_,_,_,_,_),
-                                      listafaseVacinacao1(F1)
-                                      pertence(ID, F1)
+                                      listafaseVacinacao1(F1),
+                                      pertence(ID, F1),
                                       peepsVac(V),
                                       nao(pertence(ID, V))),
                               X),
@@ -333,9 +311,9 @@ candidatosFase1(R) :- findall(ID,
 falta2toma(R) :- findall(ID,
                                   (utente(ID,_,_,_,_,_,_,_,_),
                                   peepsVac1Time(V1),
-                                  pertence(ID, V1)
+                                  pertence(ID, V1),
                                   peepsVac2Time(V2),
-                                  pertence(ID, V2)),
+                                  nao(pertence(ID, V2))),
                               X),
                       ordena(X, R).
 
@@ -346,15 +324,25 @@ falta2toma(R) :- findall(ID,
 % ---------------------------------------------------------------------
 
 %---------------------------------------------------------------------
-% Verifica se uma data é anterior à atual; jaPassou(Dia atual, Mes atual, Ano atual, Dia, Mes, Ano). -> {V,F}
-%----------nao sei se é preciso o "!, true." mas funciona das duas maneiras---------
-jaPassou(_, _, A) :- dataA(_,_, Aatual), A < Aatual, !, true.
-jaPassou( _, M, A) :- dataA(_, Matual, Aatual), A =:= Aatual, M < Matual, !, true.
-jaPassou(D, M, A) :- dataA(Datual, Matual, Aatual),  A =:= Aatual, M =:= Matual, D < Datual, !, true.
+% Verifica se uma data é anterior à atual; jaPassou(Dia, Mes, Ano). -> {V,F}
+%----------nao sei se é preciso o "!, true." mas funciona das duas maneiras-------------------------------------------------------------------------------------------------------------------
+jaPassou(_, _, A) :- dataA(_,_, Aatual),
+                     A < Aatual, !, true.
+jaPassou( _, M, A) :- dataA(_, Matual, Aatual),
+                      A =:= Aatual,
+                      M < Matual, !, true.
+jaPassou(D, M, A) :- dataA(Datual, Matual, Aatual),
+                     A =:= Aatual,
+                     M =:= Matual,
+                     D < Datual, !, true.
 
 %---------------------------------------------------------------------
 % Verifica se um utente ja tomou as duas doses da vacina; veraux(ID do utente). -> {V,F}
-veraux(ID) :- utente(ID,_,_,_,_,_,_,_,_), vacinacao(_,ID,D1,M1,A1,_,1), jaPassou(D1, M1, A1), vacinacao(_,ID,D2,M2,A2,_,2), jaPassou(D2, M2, A2).
+veraux(ID) :- utente(ID,_,_,_,_,_,_,_,_),
+              vacinacao(_,ID,D1,M1,A1,_,1),
+              jaPassou(D1, M1, A1),
+              vacinacao(_,ID,D2,M2,A2,_,2),
+              jaPassou(D2, M2, A2).
 
 %---------------------------------------------------------------------
 % Verifica se todos os utentes de uma lista ja tomaram a 2a toma da vacina; verifica2toma(Lista de IDs de utentes). -> {V,F}
@@ -398,10 +386,10 @@ repRemove([X|A],R) :- elemRemove(X,A,L),
 elemRemove(_,[],[]).
 elemRemove(A,[A|Y],T) :- elemRemove(A,Y,T).
 elemRemove(A,[X|Y],T) :- X \== A,
-                          elemRemove(A,Y,R),
-                      			T = [X|R].
+                         elemRemove(A,Y,R),
+                      	 T = [X|R].
 
 %---------------------------------------------------------------------
-% Faz o não cenas;
+% Faz o não cenas;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 nao( Questao ) :- Questao, !, fail.
 nao( _ ).
