@@ -68,8 +68,6 @@ centrosaude(17, 'Centro de Saúde de Faro', 'Urbanização Hortas das Figuras, 8
 centrosaude(18, 'USF Novo Cuidar', 'R. José Ribeiro Vieira de Castro 125, 4820-273 Fafe', 253490863, 'usffafe@gmail.com').
 centrosaude(19, 'Centro de Saúde de Aveiro', 'Viela da Fonte dos Amores 57A, 3810-164 Aveiro', 234891170, 'csaveiro@gmail.com').
 centrosaude(20, 'Centro de Saúde de Barcelos', 'R. Dr. Abel Varzim, 4750-253 Barcelos', 253808300, 'csbarcelos@gmail.com').
-centrosaude(21, 'Centro de Saúde de Braga, Largo Paulo Orósio, 4700-031 Braga', 253209230, 'csbraga@gmail.com').
-centrosaude(22, 'Centro de Saúde de Braga', 'Largo Paulo Orósio, 4700-031 Braga', 253209230, 'csbraga@gmail.com').
 
 
 %---------------------------------------------------------------------
