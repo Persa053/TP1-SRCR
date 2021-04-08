@@ -24,10 +24,6 @@ solucoes(_, _, R) :- solucoesAux([], R).
 solucoesAux(L, R) :- retract(tmp(X)), !, solucoesAux([X|L], R).
 solucoesAux(R, R).
 
-%#AInesÉFixe%%%%%evolucao( Termo ) :-
-%#AInesÉFixe%%%%%  solucoes( Invariante,+Termo::Invariante,Lista ),--------------------------------------------------------------------------------------------------------------------------
-%#AInesÉFixe%%%%%    insercao( Termo ),
-%#AInesÉFixe%%%%%      teste( Lista ).
 
 % fase1Vacincacao: #IdEnfermeiro,Nome,Idade,Género,#CentroSaude -> {V,F}
 %1a fase 1 Vacinacao
@@ -63,7 +59,7 @@ listafaseVacinacao1(IDs) :- listaEnfermeirxV(E),
 
 %---------------------------------------------------------------------
 % Identifica todos os eleitos para a segunda fase de vacinaçao; listafaseVacinacao2(lista de IDs de utentes). -> {V,F}
-listafaseVacinacao2(IDs) :- findall(ID, (listafaseVacinacao1(Xs), utente(ID,_,_,_,_,_,_,_,_), nao(pertence(ID, Xs))), IDs).
+listafaseVacinacao2(IDs) :- findall(ID,(listafaseVacinacao1(Xs), utente(ID,_,_,_,_,_,_,_,_), nao(pertence(ID, Xs))), IDs).
 
 %---------------------------------------------------------------------
 % Identificar utentes/centrosaude/staff por critérios de seleção
@@ -192,6 +188,49 @@ teste( [] ).
 teste( [R|LR] ) :- R, teste( LR ).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Todos os utentes tem ID's distintos;
++utente(Id,_,_,_,_,_,_,_,_) :: (findall( Id, utente(Id,_,_,_,_,_,_,_,_), R),
+                                    length(R, X), X==1).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Todos os utentes tem números da SS distintos;
++utente(_,Ss,_,_,_,_,_,_,_) :: (findall( Ss, utente(_,Ss,_,_,_,_,_,_,_), R),
+                                    length(R, X), X==1).
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Todos os centros de saude tem ID's distintos;
++centrosaude(Id,_,_,_,_) :: (findall( Id, centrosaude(Id,_,_,_,_), R),
+                                    length(R, X), X==1).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Todos os centros de saude tem moradas distintas;
++centrosaude(_,_,M,_,_) :: (findall( M, centrosaude(_,_,M,_,_), R),
+                                    length(R, X), X==1).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Todos os centros de saude tem numeros de telefone distintos;
++centrosaude(_,_,_,T,_) :: (findall( T, centrosaude(_,_,_,T,_), R),
+                                    length(R, X), X==1).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Todos os centros de saude tem emails distintos;
++centrosaude(_,_,_,_,E) :: (findall( E, centrosaude(_,_,_,_,E), R),
+                                    length(R, X), X==1).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Todos os membros do staff tem ID's distintos;
++staff(Id,_,_,_) :: (findall( Id, staff(Id,_,_,_), R),
+                                    length(R, X), X==1).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Todos os membros do staff tem de estar destacados num centro de saude existente distintos;
++staff(_,Cs,_,_) :: (findall( Id, centrosaude(Id,_,_,_,_), R),
+                                    pertence(Cs, R)).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Todos os membros do staff tem emails distintos;
++staff(_,_,_,M) :: (findall( M, staff(_,_,_,M), R),
+                                      length(R, X), X==1).
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Faz a removoção de conhecimento
 % Extensão predicado que permite a involucao conhecimento: Termo - {V,F}
 
@@ -203,7 +242,6 @@ involucao( Termo ) :- solucoes( Invariante, -Termo::Invariante, Lista ),
 remocao( Termo ) :- retract( Termo ).
 remocao( Termo ) :- assert( Termo ),!,fail.
 
-%Permitir a definição de fases de vacinação, definindo critérios de inclusão de utentes nas diferentes fases (e.g., doenças crónicas, idade, profissão);
 
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas vacinadas com a 1a dose; peepsVac1Time(Lista de IDs de utentes). -> {V,F}
@@ -325,16 +363,15 @@ falta2toma(R) :- findall(ID,
 
 %---------------------------------------------------------------------
 % Verifica se uma data é anterior à atual; jaPassou(Dia, Mes, Ano). -> {V,F}
-%----------nao sei se é preciso o "!, true." mas funciona das duas maneiras-------------------------------------------------------------------------------------------------------------------
 jaPassou(_, _, A) :- dataA(_,_, Aatual),
-                     A < Aatual, !, true.
+                     A < Aatual.
 jaPassou( _, M, A) :- dataA(_, Matual, Aatual),
                       A =:= Aatual,
-                      M < Matual, !, true.
+                      M < Matual.
 jaPassou(D, M, A) :- dataA(Datual, Matual, Aatual),
                      A =:= Aatual,
                      M =:= Matual,
-                     D < Datual, !, true.
+                     D < Datual.
 
 %---------------------------------------------------------------------
 % Verifica se um utente ja tomou as duas doses da vacina; veraux(ID do utente). -> {V,F}
@@ -390,6 +427,6 @@ elemRemove(A,[X|Y],T) :- X \== A,
                       	 T = [X|R].
 
 %---------------------------------------------------------------------
-% Faz o não cenas;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% Extensao do meta-predicado nao: Questao -> {V,F}
 nao( Questao ) :- Questao, !, fail.
 nao( _ ).
