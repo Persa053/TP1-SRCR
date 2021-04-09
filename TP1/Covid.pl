@@ -12,7 +12,6 @@
 
 :- op( 900,xfy,'::' ).
 :- dynamic faseVacinacao/2.
-:- dynamic data/3.
 :- use_module(conhecimento).
 
 % Data atual
