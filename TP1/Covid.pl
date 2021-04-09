@@ -73,29 +73,29 @@ listafaseVacinacao2(IDs) :- findall(ID,(listafaseVacinacao1(Xs), utente(ID,_,_,_
 %Utente: #Idutente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde ↝ { 𝕍, 𝔽}
 
 
-%utenteId(Id, R) :-
-%        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
+utenteId(Id, R) :-
+        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), R).
 
-%utenteNrSs(Ss, R) :-
-        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
+utenteNrSs(Ss, R) :-
+        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), R).
 
-%utenteNome(N, R) :-
-        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
+utenteNome(N, R) :-
+        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), R).
 
-%utenteDataNascimento(_, R) :-
-        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
+utenteDataNascimento(_, R) :-
+        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), R).
 
-%utenteEmail(E, R) :-
-        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
+utenteEmail(E, R) :-
+        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), R).
 
-%utenteTelefone(Tlf, R) :-
-        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
+utenteTelefone(Tlf, R) :-
+        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), R).
 
-%utenteMorada(M, R) :-
-        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
+utenteMorada(M, R) :-
+        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), R).
 
-%utenteProfissao(P, R) :-
-        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
+utenteProfissao(P, R) :-
+        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,Cs), R).
 
 %--------- CentroSaude
 
@@ -251,18 +251,24 @@ teste( [R|LR] ) :- R, teste( LR ).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   - %vacinação_Covid: #Staff, #utente, Dia, Mes,Ano, Vacina, Toma↝ { 𝕍, 𝔽 }
 % Todos as vacinas tem um mebro do staff existente;
-%+vacinacao(S,_,_,_,_,_,_) :: (findall( S, staff(S,_,_,_), R),
-%                                      pertence(S,R)).
++vacinacao(S,_,_,_,_,_,_) :: (findall( S, staff(S,_,_,_), R),
+                                      length(R, X), X==1).
 
-% Todas as vacinas tem um utente por toma;
-+vacinacao(_,U,_,_,_,_,_) :: (findall(U, utente(U,_,_,_,_,_,_,_,_,_), R),
-                                      length(R, X), X=<2).
-% Todas as vacinas tem um utente por toma;
-%+vacinacao(_,U,_,_,_,_,2) :: (findall(U, utente(U,_,_,_,_,_,_,_,_,_), R),
-%                                      length(R, X), X==1).
-% tomar um tipo de vacina
-%+vacinacao(_,U,_,_,_,Tipo,_) :: (findall((U, Tipo), vacinacao(_,U,_,_,_,Tipo,_), R),
-%                                      length(R, X), X==2).
++vacinacao(_,U,_,_,_,_,_) :: (findall( U, utente(U,_,_,_,_,_,_,_,_,_), R),
+                                      length(R, X), X==1).
+
+% Todas as vacinas tem um utente por toma, por vacina;
++vacinacao(_,U,_,_,_,_,Toma) :: (findall((U, Toma), vacinacao(_,U,_,_,_,_,Toma), R),
+                                      length(R, X), X==1).
+
+% funcao da joana <------------------------------------------------------------------------------------------ Veja aqui stor
++vacinacao(_,U,_,_,_,Tipo,Toma) :: (Toma == 1;(findall((U, Tipo), vacinacao(_,U,_,_,_,Tipo,_), R),
+                                      length(R, X), X==2)).
+
+% Staff e Utente mesmo centro de saude.
++vacinacao(S,U,_,_,_,_,_) :: (findall((U, S, Cs), (utente(U,_,_,_,_,_,_,_,_,Cs), staff(S,Cs,_,_)), R),
+                                      length(R, X), X==1).
+
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Faz a removoção de conhecimento
 % Extensão predicado que permite a involucao conhecimento: Termo - {V,F}
