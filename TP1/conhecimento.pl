@@ -19,6 +19,7 @@
 %---------------------------------------------------------------------
 %Utente: #Idutente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde ↝ { 𝕍, 𝔽}
 
+%Base de conhecimento do Utente
 utente(1, 087462728, 'Jose Oliveira',1965, 'joseoliv@gmail.com', 917263549, braga, engenheirx, [colestrol],1).
 utente(2, 528102846, 'Diogo Espirito Santo',1956, 'diant@gmail.com', 936489367, coimbra, medicx, [],7).
 utente(3, 658746027, 'Afonso Castro', 1997, 'fonso@gmail.com', 927362918,braga, empresarix, [hipertensao],2).
@@ -48,6 +49,7 @@ utente(22, 347086589, 'Joao Baiao', 1930, 'joaos123@gmail.com', 915479768, braga
 %---------------------------------------------------------------------
 %centro_saúde: #Idcentro, Nome, Morada, Telefone, Email ↝ { 𝕍, 𝔽}
 
+%Base de conhecimento dos Centros de Saúde 
 centrosaude(1, 'Centro de Saúde de Braga', 'Largo Paulo Orósio, 4700-031 Braga', 253928647, 'csbraga@gmail.com').
 centrosaude(2, 'USF Bracara Augusta', 'Praça Gen. Humberto Delgado 47, 4715-213 Braga', 253964876, 'bracaraaugusta@gmail.com').
 centrosaude(3, 'USF Sanus Caranda', 'R. André Soares 25, 4715-213 Braga', 253201530, 'usfcaranda@gmail.com'),2.
