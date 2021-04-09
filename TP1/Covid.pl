@@ -311,7 +311,8 @@ peepsVac1Time(R) :- findall(ID,
                                   utente(ID,_,_,_,_,_,_,_,_,_),
                                   jaPassou(D, M, A)),
                             X),
-                    ordena(X, R).
+                    repRemove(X,B),
+                    ordena(B, R).
 
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas vacinadas com 2a dose; peepsVac2Time(Lista de IDs de utentes). -> {V,F}
@@ -320,7 +321,8 @@ peepsVac2Time(R) :- findall(ID,
                                   utente(ID,_,_,_,_,_,_,_,_,_),
                                   jaPassou(D, M, A)),
                             X),
-                    ordena(X, R).
+                    repRemove(X,B),
+                    ordena(B, R).
 
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas vacinadas pelo menos uma vez; peepsVac(Lista de IDs de utentes). -> {V,F}
@@ -339,7 +341,8 @@ fullVac(R) :- findall(ID,
                           peepsVac2Time(V2),
                           pertence(ID,V2)),
                       X),
-              ordena(X, R).
+              repRemove(X,B),
+              ordena(B, R).
 
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas não vacinadas; peepsNoVac(Lista de IDs de utentes). -> {V,F}
@@ -358,7 +361,8 @@ peepsVac1Futura(R) :- findall(ID,
                                      utente(ID,_,_,_,_,_,_,_,_,_),
                                      nao(jaPassou(D, M, A))),
                              X),
-                     ordena(X,R).
+                     repRemove(X,B),
+                     ordena(B,R).
 
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas que tem a segunda toma prevista; peepsVac2Futura(lista de IDs de utentes). -> {V,F}
@@ -367,7 +371,8 @@ peepsVac2Futura(R) :- findall(ID,
                                     utente(ID,_,_,_,_,_,_,_,_,_),
                                     nao(jaPassou(D, M, A))),
                               X),
-                      ordena(X,R).
+                      repRemove(X,B),
+                      ordena(B,R).
 
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas não vacinadas e não tem toma prevista; peepsNoVacFutura(lista de IDs de utentes). -> {V,F}
@@ -405,7 +410,8 @@ candidatosFase1(R) :- findall(ID,
                                       peepsVac(V),
                                       nao(pertence(ID, V))),
                               X),
-                      ordena(X, R).
+                      repRemove(X,B),
+                      ordena(B, R).
 
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas que falta a segunda toma da vacina; falta2toma(lista de IDs de utentes). -> {V,F}
@@ -416,7 +422,8 @@ falta2toma(R) :- findall(ID,
                                   peepsVac2Time(V2),
                                   nao(pertence(ID, V2))),
                               X),
-                      ordena(X, R).
+                      repRemove(X,B),
+                      ordena(B, R).
 
 %---------------------------------------------------------------------
 % estimativa de doses futuras para cada uma das fases
@@ -424,7 +431,7 @@ calculaDosesFuturas(Res1,Res2) :- peepsVac1Futura(R1), peepsVac2Futura(R2), leng
 
 
 %---------------------------------------------------------------------
-% estimativa de doses por vacina dada
+% estimativa de doses futuras por vacina dada
 estimativaPorVacinas(Tipo, Res) :- findall(Tipo, (vacinacao(_,_,D,M,A,Tipo,_), nao(jaPassou(D,M,A))), R), length(R, X), Res is X.
 
 % ---------------------------------------------------------------------
