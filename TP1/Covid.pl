@@ -16,7 +16,11 @@
 :- use_module(conhecimento).
 
 % Data atual
-dataA(4,4,2021).
+dataAtual(Dia, Mes, Ano) :- get_time(TS),
+                            stamp_date_time(TS,DateTime,'local'),
+                            arg(3,DateTime,Dia),
+                            arg(2,DateTime,Mes),
+                            arg(1,DateTime,Ano).
 
 solucoes(X, XS, _) :- XS, assert(tmp(X)), fail.
 solucoes(_, _, R) :- solucoesAux([], R).
@@ -30,19 +34,19 @@ solucoesAux(R, R).
 
 %Lista dos cenas para a primeira fase de Vacinacao (Uma ou mais doença fdd; >65 anos; Medicxs; Enfermeirxs)
 % Identifica utentes com uma ou mais Doenças; listaDoentesRiscoV(lista de IDs de utentes). -> {V,F}
-listaDoentesRiscoV(IDs) :- findall(ID, (utente(ID,_,_,_,_,_,_,_,Doencas), length(Doencas, R), R > 0), IDs).
+listaDoentesRiscoV(IDs) :- findall(ID, (utente(ID,_,_,_,_,_,_,_,Doencas,_), length(Doencas, R), R > 0), IDs).
 
 %---------------------------------------------------------------------
 % Identifica utentes com mais de 65 anos de idade; listaVelhosV(lista de IDs de utentes). -> {V,F}
-listaVelhosV(IDs) :- findall(ID, (utente(ID,_,_,Idade,_,_,_,_,_), dataA(_,_,A), A-Idade > 65), IDs).
+listaVelhosV(IDs) :- findall(ID, (utente(ID,_,_,Idade,_,_,_,_,_,_), dataA(_,_,A), A-Idade > 65), IDs).
 
 %---------------------------------------------------------------------
 % Identifica utentes que são médicos de profissão; listaMedicxV(lista de IDs de utentes). -> {V,F}
-listaMedicxV(IDs) :- findall(ID, utente(ID,_,_,_,_,_,_,medicx,_), IDs).
+listaMedicxV(IDs) :- findall(ID, utente(ID,_,_,_,_,_,_,medicx,_,_), IDs).
 
 %---------------------------------------------------------------------
 % Identifica utentes que são enfermeiros de profissão; listaEnfermeirxV(lista de IDs de utentes). -> {V,F}
-listaEnfermeirxV(IDs) :- findall(ID, utente(ID,_,_,_,_,_,_,enfermeirx,_), IDs).
+listaEnfermeirxV(IDs) :- findall(ID, utente(ID,_,_,_,_,_,_,enfermeirx,_,_), IDs).
 
 %---------------------------------------------------------------------
 % Identifica todos os eleitos para a primeira fase de vacinaçao; listafaseVacinacao1(lista de IDs de utentes). -> {V,F}
@@ -59,7 +63,7 @@ listafaseVacinacao1(IDs) :- listaEnfermeirxV(E),
 
 %---------------------------------------------------------------------
 % Identifica todos os eleitos para a segunda fase de vacinaçao; listafaseVacinacao2(lista de IDs de utentes). -> {V,F}
-listafaseVacinacao2(IDs) :- findall(ID,(listafaseVacinacao1(Xs), utente(ID,_,_,_,_,_,_,_,_), nao(pertence(ID, Xs))), IDs).
+listafaseVacinacao2(IDs) :- findall(ID,(listafaseVacinacao1(Xs), utente(ID,_,_,_,_,_,_,_,_,_), nao(pertence(ID, Xs))), IDs).
 
 %---------------------------------------------------------------------
 % Identificar utentes/centrosaude/staff por critérios de seleção
@@ -70,28 +74,28 @@ listafaseVacinacao2(IDs) :- findall(ID,(listafaseVacinacao1(Xs), utente(ID,_,_,_
 %Utente: #Idutente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde ↝ { 𝕍, 𝔽}
 
 
-utenteId(Id, R) :-
+%utenteId(Id, R) :-
+%        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
+
+%utenteNrSs(Ss, R) :-
         solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
 
-utenteNrSs(Ss, R) :-
+%utenteNome(N, R) :-
         solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
 
-utenteNome(N, R) :-
+%utenteDataNascimento(_, R) :-
         solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
 
-utenteDataNascimento(_, R) :-
+%utenteEmail(E, R) :-
         solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
 
-utenteEmail(E, R) :-
+%utenteTelefone(Tlf, R) :-
         solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
 
-utenteTelefone(Tlf, R) :-
+%utenteMorada(M, R) :-
         solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
 
-utenteMorada(M, R) :-
-        solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
-
-utenteProfissao(P, R) :-
+%utenteProfissao(P, R) :-
         solucoes(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), utente(Id,Ss,N,Dt,E,Tlf,M,P,DC), R).
 
 %--------- CentroSaude
@@ -189,13 +193,28 @@ teste( [R|LR] ) :- R, teste( LR ).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Todos os utentes tem ID's distintos;
-+utente(Id,_,_,_,_,_,_,_,_) :: (findall( Id, utente(Id,_,_,_,_,_,_,_,_), R),
++utente(Id,_,_,_,_,_,_,_,_,_) :: (findall( Id, utente(Id,_,_,_,_,_,_,_,_,_), R),
                                     length(R, X), X==1).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Todos os utentes tem números da SS distintos;
-+utente(_,Ss,_,_,_,_,_,_,_) :: (findall( Ss, utente(_,Ss,_,_,_,_,_,_,_), R),
++utente(_,Ss,_,_,_,_,_,_,_,_) :: (findall( Ss, utente(_,Ss,_,_,_,_,_,_,_,_), R),
                                     length(R, X), X==1).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Todos os utentes tem emails distintos;
++utente(_,_,_,_,E,_,_,_,_,_) :: (findall( E, utente(_,_,_,_,E,_,_,_,_,_), R),
+                                    length(R, X), X==1).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Todos os utentes tem números de telefone distintos;
++utente(_,_,_,_,_,T,_,_,_,_) :: (findall( T, utente(_,_,_,_,_,T,_,_,_,_), R),
+                                    length(R, X), X==1).
+
+% Todos os utentes estao destacados num centro de saude existente;
++utente(_,_,_,_,_,_,_,_,_,Cs) :: (findall( Cs, centrosaude(Cs,_,_,_,_), R),
+                                    length(R, X), X==1).
+
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Todos os centros de saude tem ID's distintos;
 +centrosaude(Id,_,_,_,_) :: (findall( Id, centrosaude(Id,_,_,_,_), R),
@@ -223,13 +242,28 @@ teste( [R|LR] ) :- R, teste( LR ).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Todos os membros do staff tem de estar destacados num centro de saude existente distintos;
-+staff(_,Cs,_,_) :: (findall( Id, centrosaude(Id,_,_,_,_), R),
-                                    pertence(Cs, R)).
++staff(_,Cs,_,_) :: (findall( Cs, centrosaude(Cs,_,_,_,_), R),
+                                    length(R, X), X==1).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Todos os membros do staff tem emails distintos;
 +staff(_,_,_,M) :: (findall( M, staff(_,_,_,M), R),
                                       length(R, X), X==1).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   - %vacinação_Covid: #Staff, #utente, Dia, Mes,Ano, Vacina, Toma↝ { 𝕍, 𝔽 }
+% Todos as vacinas tem um mebro do staff existente;
+%+vacinacao(S,_,_,_,_,_,_) :: (findall( S, staff(S,_,_,_), R),
+%                                      pertence(S,R)).
+
+% Todas as vacinas tem um utente por toma;
++vacinacao(_,U,_,_,_,_,_) :: (findall(U, utente(U,_,_,_,_,_,_,_,_,_), R),
+                                      length(R, X), X=<2).
+% Todas as vacinas tem um utente por toma;
+%+vacinacao(_,U,_,_,_,_,2) :: (findall(U, utente(U,_,_,_,_,_,_,_,_,_), R),
+%                                      length(R, X), X==1).
+% tomar um tipo de vacina
+%+vacinacao(_,U,_,_,_,Tipo,_) :: (findall((U, Tipo), vacinacao(_,U,_,_,_,Tipo,_), R),
+%                                      length(R, X), X==2).
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Faz a removoção de conhecimento
 % Extensão predicado que permite a involucao conhecimento: Termo - {V,F}
@@ -247,7 +281,7 @@ remocao( Termo ) :- assert( Termo ),!,fail.
 % Identificar IDs de pessoas vacinadas com a 1a dose; peepsVac1Time(Lista de IDs de utentes). -> {V,F}
 peepsVac1Time(R) :- findall(ID,
                                   (vacinacao(_,ID,D,M,A, _, 1),
-                                  utente(ID,_,_,_,_,_,_,_,_),
+                                  utente(ID,_,_,_,_,_,_,_,_,_),
                                   jaPassou(D, M, A)),
                             X),
                     ordena(X, R).
@@ -256,7 +290,7 @@ peepsVac1Time(R) :- findall(ID,
 % Identificar IDs de pessoas vacinadas com 2a dose; peepsVac2Time(Lista de IDs de utentes). -> {V,F}
 peepsVac2Time(R) :- findall(ID,
                                   (vacinacao(_,ID,D,M,A, _, 2),
-                                  utente(ID,_,_,_,_,_,_,_,_),
+                                  utente(ID,_,_,_,_,_,_,_,_,_),
                                   jaPassou(D, M, A)),
                             X),
                     ordena(X, R).
@@ -272,7 +306,7 @@ peepsVac(R) :- peepsVac1Time(V1),
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas vacinadas com as duas doses; fullVac(Lista de IDs de utentes). -> {V,F}
 fullVac(R) :- findall(ID,
-                          (utente(ID,_,_,_,_,_,_,_,_),
+                          (utente(ID,_,_,_,_,_,_,_,_,_),
                           peepsVac1Time(V1),
                           pertence(ID,V1),
                           peepsVac2Time(V2),
@@ -283,7 +317,7 @@ fullVac(R) :- findall(ID,
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas não vacinadas; peepsNoVac(Lista de IDs de utentes). -> {V,F}
 peepsNoVac(R) :- findall(ID,
-                              (utente(ID,_,_,_,_,_,_,_,_),
+                              (utente(ID,_,_,_,_,_,_,_,_,_),
                               peepsVac(V),
                               nao(pertence(ID, V))),
                          X),
@@ -293,7 +327,7 @@ peepsNoVac(R) :- findall(ID,
 % Identificar IDs de pessoas que tem a primeira toma prevista; peepsVac1Futura(lista de IDs de utentes). -> {V,F}
 peepsVac1Futura(R) :- findall(ID,
                                     (vacinacao(_,ID,D,M,A, _, 1),
-                                     utente(ID,_,_,_,_,_,_,_,_),
+                                     utente(ID,_,_,_,_,_,_,_,_,_),
                                      nao(jaPassou(D, M, A))),
                              X),
                      ordena(X,R).
@@ -302,7 +336,7 @@ peepsVac1Futura(R) :- findall(ID,
 % Identificar IDs de pessoas que tem a segunda toma prevista; peepsVac2Futura(lista de IDs de utentes). -> {V,F}
 peepsVac2Futura(R) :- findall(ID,
                                     (vacinacao(_,ID,D,M,A, _, 2),
-                                    utente(ID,_,_,_,_,_,_,_,_),
+                                    utente(ID,_,_,_,_,_,_,_,_,_),
                                     nao(jaPassou(D, M, A))),
                               X),
                       ordena(X,R).
@@ -310,7 +344,7 @@ peepsVac2Futura(R) :- findall(ID,
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas não vacinadas e não tem toma prevista; peepsNoVacFutura(lista de IDs de utentes). -> {V,F}
 peepsNoVacFutura(R) :- findall(ID,
-                                (utente(ID,_,_,_,_,_,_,_,_),
+                                (utente(ID,_,_,_,_,_,_,_,_,_),
                                 peepsNoVac(X),
                                 pertence(ID,X),
                                 peepsVac1Futura(Y),
@@ -324,7 +358,7 @@ peepsNoVacFutura(R) :- findall(ID,
 % Identificar IDs de pessoas vacianadas indevidamente; indevidamente(lista de IDs de utentes). -> {V,F}
 indevidamente(R) :- findall(ID,
                                       (vacinacao(_, ID, D, M, A,_,_),
-                                      utente(ID,_,_,_,_,_,_,_,_),
+                                      utente(ID,_,_,_,_,_,_,_,_,_),
                                       jaPassou(D, M, A),
                                       listafaseVacinacao1(F1),
                                       nao(pertence(ID, F1)),
@@ -336,7 +370,7 @@ indevidamente(R) :- findall(ID,
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas não vacinadas nenhuma vez e candidatas à primeira fase; candidatosFase1(lista de IDs de utentes). -> {V,F}
 candidatosFase1(R) :- findall(ID,
-                                      (utente(ID,_,_,_,_,_,_,_,_),
+                                      (utente(ID,_,_,_,_,_,_,_,_,_),
                                       listafaseVacinacao1(F1),
                                       pertence(ID, F1),
                                       peepsVac(V),
@@ -347,7 +381,7 @@ candidatosFase1(R) :- findall(ID,
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas que falta a segunda toma da vacina; falta2toma(lista de IDs de utentes). -> {V,F}
 falta2toma(R) :- findall(ID,
-                                  (utente(ID,_,_,_,_,_,_,_,_),
+                                  (utente(ID,_,_,_,_,_,_,_,_,_),
                                   peepsVac1Time(V1),
                                   pertence(ID, V1),
                                   peepsVac2Time(V2),
@@ -375,7 +409,7 @@ jaPassou(D, M, A) :- dataA(Datual, Matual, Aatual),
 
 %---------------------------------------------------------------------
 % Verifica se um utente ja tomou as duas doses da vacina; veraux(ID do utente). -> {V,F}
-veraux(ID) :- utente(ID,_,_,_,_,_,_,_,_),
+veraux(ID) :- utente(ID,_,_,_,_,_,_,_,_,_),
               vacinacao(_,ID,D1,M1,A1,_,1),
               jaPassou(D1, M1, A1),
               vacinacao(_,ID,D2,M2,A2,_,2),
