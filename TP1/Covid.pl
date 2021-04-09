@@ -268,6 +268,11 @@ teste( [R|LR] ) :- R, teste( LR ).
 % Staff e Utente mesmo centro de saude.
 +vacinacao(S,U,_,_,_,_,_) :: (findall((U, S, Cs), (utente(U,_,_,_,_,_,_,_,_,Cs), staff(S,Cs,_,_)), R),
                                       length(R, X), X==1).
+                                      
+% Segunda toma ser depois da primeira------------------------------------------------------------------------------------------------------------------------------------------------------------
++vacinacao(_,U,_,_,_,_,_) :: (findall((U, D1, M1, A1, D2, M2, A2), vacinacao(_,U,D1,M1,A1,_,1), vacinacao(_,U,D2,M2,A2,_,2), R),
+                                      length(R, X), X==2,
+                                      comparaDatas(D1,M1,A1 , D2,M2,A2)).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Faz a removoção de conhecimento
