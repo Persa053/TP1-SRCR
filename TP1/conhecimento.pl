@@ -17,7 +17,7 @@
 %---------------------------------------------------------------------
 %-------- Utente -----------------------------------------------------
 %---------------------------------------------------------------------
-%Utente: #Idutente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde ↝ { 𝕍, 𝔽}
+%Utente: #Idutente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde -> {V,F}
 
 %Base de conhecimento do Utente
 utente(1, 087462728, 'Jose Oliveira',1965, 'joseoliv@gmail.com', 917263549, braga, engenheirx, [colestrol],1).
@@ -47,7 +47,7 @@ utente(22, 347086589, 'Joao Baiao', 1930, 'joaos123@gmail.com', 915479768, braga
 %---------------------------------------------------------------------
 %-------- CentroSaude ------------------------------------------------
 %---------------------------------------------------------------------
-%centro_saúde: #Idcentro, Nome, Morada, Telefone, Email ↝ { 𝕍, 𝔽}
+%centro_saúde: #Idcentro, Nome, Morada, Telefone, Email -> {V,F}
 
 %Base de conhecimento dos Centros de Saúde 
 centrosaude(1, 'Centro de Saúde de Braga', 'Largo Paulo Orósio, 4700-031 Braga', 253928647, 'csbraga@gmail.com').
@@ -75,7 +75,7 @@ centrosaude(20, 'Centro de Saúde de Barcelos', 'R. Dr. Abel Varzim, 4750-253 Ba
 %---------------------------------------------------------------------
 %-------- CentroSaude ------------------------------------------------
 %---------------------------------------------------------------------
-%staff: #Cstaff, #Idcentro, Nome, email ↝ { 𝕍, 𝔽 }
+%staff: #Cstaff, #Idcentro, Nome, email -> {V,F}
 
 %Base de conhecimento do staff
 staff(1, 1, 'Monica Sintra','monicas@gmail.com').
@@ -118,7 +118,7 @@ staff(36, 20, 'Filipa Trindade', 'filipatrindade@gmail.com').
 %---------------------------------------------------------------------
 %-------- Vacinação --------------------------------------------------
 %---------------------------------------------------------------------
-%vacinação_Covid: #Staf, #utente, Dia, Mes,Ano, Vacina, Toma↝ { 𝕍, 𝔽 }
+%vacinação_Covid: #Staf, #utente, Dia, Mes,Ano, Vacina, Toma -> {V,F}
 
 %Base de conhecimento da vacinação
 vacinacao(1,1,02,05,2021, astraZeneca, 1).
