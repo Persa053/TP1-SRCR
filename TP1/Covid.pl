@@ -31,7 +31,7 @@ solucoesAux(R, R).
 % fase1Vacincacao: #IdEnfermeiro,Nome,Idade,Género,#CentroSaude -> {V,F}
 %Primeira fase 1 Vacinacao
 
-%Lista dos cenas para a primeira fase de Vacinacao (Uma ou mais doença fdd; >65 anos; Medicxs; Enfermeirxs)
+%Lista dos cenas para a primeira fase de Vacinacao (Uma ou mais doença crónica; >65 anos; Medicxs; Enfermeirxs)
 % Identifica utentes com uma ou mais Doenças; listaDoentesRiscoV(lista de IDs de utentes). -> {V,F}
 listaDoentesRiscoV(IDs) :- findall(ID, (utente(ID,_,_,_,_,_,_,_,Doencas,_), length(Doencas, R), R > 0), IDs).
 
