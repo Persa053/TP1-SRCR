@@ -101,7 +101,7 @@ utenteProfissao(P, R) :-
 
 
 %centro_saúde: #Idcentro, Nome, Morada, Telefone, Email ↝ { 𝕍, 𝔽}
-%centrosaude(1, 'Centro de Saúde de Braga', 'Largo Paulo Orósio, 4700-031 Braga', 253928647, 'csbraga@gmail.com').
+
 
 centroSaudeId(Id, R) :-
         solucoes(centrosaude(Id,N,M,Tlf,E), centrosaude(Id,N,M,Tlf,E), R).
@@ -122,7 +122,7 @@ centroSaudeEmail(E, R) :-
 %--------- Staff
 
 %staff: #Cstaff, #Idcentro, Nome, email ↝ { 𝕍, 𝔽 }
-%staff(1, 1, 'Monica Sintra','monicas@gmail.com').
+
 
 staffId(Id, R) :-
         solucoes(staff(Id,Cs,N,E), staff(Id,Cs,N,E), R).
@@ -141,7 +141,7 @@ staffEmail(E, R) :-
 %--------- MedicoFamilia
 
 % medicoFamilia: #IdMedico,Nome,Idade,Género,#CentroSaude -> {V,F}
-%medico(1,'Ester Domingues',47,'F',1).
+
 
 
 medicoId(Id, R) :-
@@ -163,7 +163,7 @@ medicoCentroSaude(Cs, R) :-
 %--------- Enfermeiro
 
 % enfermeiro: #IdEnfermeiro,Nome,Idade,Género,#CentroSaude -> {V,F}
-% enfermeiro(1,'Márcia Araujo',27,'F',1).
+
 
 enfermeiroID(Id, R) :- solucoes(enfermeiro(Id,N,I,G,Cs), enfermeiro(Id,N,I,G,Cs), R).
 
