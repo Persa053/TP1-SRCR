@@ -21,17 +21,16 @@ dataA(Dia, Mes, Ano) :- get_time(TS),
                             arg(2,DateTime,Mes),
                             arg(1,DateTime,Ano).
 
+% predicado que calcula todas as soluções de uma dada variável numa lista
 solucoes(X, XS, _) :- XS, assert(tmp(X)), fail.
 solucoes(_, _, R) :- solucoesAux([], R).
 
 solucoesAux(L, R) :- retract(tmp(X)), !, solucoesAux([X|L], R).
 solucoesAux(R, R).
 
-
-% fase1Vacincacao: #IdEnfermeiro,Nome,Idade,Género,#CentroSaude -> {V,F}
-%Primeira fase 1 Vacinacao
-
-%Lista dos cenas para a primeira fase de Vacinacao (Uma ou mais doença crónica; >65 anos; Medicxs; Enfermeirxs)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Lista dos cenas para a primeira fase de Vacinacao (Uma ou mais doenças crónicas; >65 anos; Medicxs; Enfermeirxs)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Identifica utentes com uma ou mais Doenças; listaDoentesRiscoV(lista de IDs de utentes). -> {V,F}
 listaDoentesRiscoV(IDs) :- findall(ID, (utente(ID,_,_,_,_,_,_,_,Doencas,_), length(Doencas, R), R > 0), IDs).
 
@@ -48,6 +47,16 @@ listaMedicxV(IDs) :- findall(ID, utente(ID,_,_,_,_,_,_,medicx,_,_), IDs).
 listaEnfermeirxV(IDs) :- findall(ID, utente(ID,_,_,_,_,_,_,enfermeirx,_,_), IDs).
 
 %---------------------------------------------------------------------
+% Identifica o staff; listaStaff(lista de IDs de Staff). -> {V,F}
+listaStaff(IDs) :- findall(ID, staff(ID,_,_,_), IDs).
+
+%---------------------------------------------------------------------
+% Identifica os centros de saúde; listaCentroSaude(lista de IDs de centros de saúde). -> {V,F}
+listaCentroSaude(IDs) :- findall(ID, centrosaude(ID,_,_,_,_), IDs).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Identificar fases de vacinação
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Identifica todos os eleitos para a primeira fase de vacinaçao; listafaseVacinacao1(lista de IDs de utentes). -> {V,F}
 listafaseVacinacao1(IDs) :- listaEnfermeirxV(E),
                             listaMedicxV(M),
@@ -64,13 +73,13 @@ listafaseVacinacao1(IDs) :- listaEnfermeirxV(E),
 % Identifica todos os eleitos para a segunda fase de vacinaçao; listafaseVacinacao2(lista de IDs de utentes). -> {V,F}
 listafaseVacinacao2(IDs) :- findall(ID,(listafaseVacinacao1(Xs), utente(ID,_,_,_,_,_,_,_,_,_), nao(pertence(ID, Xs))), IDs).
 
-%---------------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Identificar utentes/centrosaude/staff por critérios de seleção
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
-%utente(20, 763487435, 'Luis Veloso', 07-08-1978, 'luisveloso@gmail.com', 927465839, aveiro, marinheiro, []).
-%Utente: #Idutente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde ↝ { 𝕍, 𝔽}
+%utente(20, 763487435, 'Luis Veloso', 07-08-1978, 'luisveloso@gmail.com', 927465839, aveiro, marinheiro, [], 7).
+%Utente: #Idutente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde -> {V,F}
 
 
 utenteId(Id, R) :-
@@ -100,7 +109,7 @@ utenteProfissao(P, R) :-
 %--------- CentroSaude
 
 
-%centro_saúde: #Idcentro, Nome, Morada, Telefone, Email ↝ { 𝕍, 𝔽}
+%centro_saúde: #Idcentro, Nome, Morada, Telefone, Email -> {V,F}
 
 
 centroSaudeId(Id, R) :-
@@ -121,7 +130,7 @@ centroSaudeEmail(E, R) :-
 
 %--------- Staff
 
-%staff: #Cstaff, #Idcentro, Nome, email ↝ { 𝕍, 𝔽 }
+%staff: #Cstaff, #Idcentro, Nome, email -> {V, F}
 
 
 staffId(Id, R) :-
@@ -138,9 +147,9 @@ staffEmail(E, R) :-
 
 
 
-%--------- MedicoFamilia
+%--------- Medico
 
-% medicoFamilia: #IdMedico,Nome,Idade,Género,#CentroSaude -> {V,F}
+% medico: #IdMedico,Nome,Idade,Género,#CentroSaude -> {V,F}
 
 
 
@@ -189,6 +198,14 @@ insercao( Termo ) :- retract( Termo ), !, fail.
 
 teste( [] ).
 teste( [R|LR] ) :- R, teste( LR ).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Predicados para registar utentes, centros de saúde, staff e vacinações
+registar_utente(A,B,C,D,E,F,G,H,I,J) :- evolucao(utente(A,B,C,D,E,F,G,H,I,J)).
+registar_centroSaude(A,B,C,D,E) :- evolucao(centrosaude(A,B,C,D,E)).
+registar_staff(A,B,C,D) :- evolucao(staff(A,B,C,D)).
+registar_vacinacao(A,B,C,D,E,F,G) :- evolucao(vacinacao(A,B,C,D,E,F,G)).
+
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Todos os utentes tem ID's distintos;
@@ -249,7 +266,7 @@ teste( [R|LR] ) :- R, teste( LR ).
 +staff(_,_,_,M) :: (findall( M, staff(_,_,_,M), R),
                                       length(R, X), X==1).
 
-%--------------------------------- - - - - - - - - - -  -  -  -  -   - %vacinação_Covid: #Staff, #utente, Dia, Mes,Ano, Vacina, Toma↝ { 𝕍, 𝔽 }
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Todos as vacinas tem um mebro do staff existente;
 +vacinacao(S,_,_,_,_,_,_) :: (findall( S, staff(S,_,_,_), R),
                                       length(R, X), X==1).
@@ -276,7 +293,7 @@ teste( [R|LR] ) :- R, teste( LR ).
                                 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Faz a removoção de conhecimento
-% Extensão predicado que permite a involucao conhecimento: Termo - {V,F}
+% Extensão predicado que permite a involucao conhecimento: Termo -> {V,F}
 
 
 involucao( Termo ) :- solucoes( Invariante, -Termo::Invariante, Lista ),
@@ -331,7 +348,8 @@ peepsNoVac(R) :- findall(ID,
                               peepsVac(V),
                               nao(pertence(ID, V))),
                          X),
-                 ordena(X, R).
+                 repRemove(X,B),
+                 ordena(B, R).
 
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas que tem a primeira toma prevista; peepsVac1Futura(lista de IDs de utentes). -> {V,F}
@@ -362,7 +380,8 @@ peepsNoVacFutura(R) :- findall(ID,
                                 peepsVac2Futura(Z),
                                 nao(pertence(ID,Z))),
                          A),
-                 ordena(A, R).
+                        repRemove(A,B),
+                        ordena(B, R).
 
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas vacianadas indevidamente; indevidamente(lista de IDs de utentes). -> {V,F}
@@ -398,6 +417,15 @@ falta2toma(R) :- findall(ID,
                                   nao(pertence(ID, V2))),
                               X),
                       ordena(X, R).
+
+%---------------------------------------------------------------------
+% estimativa de doses futuras para cada uma das fases
+calculaDosesFuturas(Res1,Res2) :- peepsVac1Futura(R1), peepsVac2Futura(R2), length(R1,X1), length(R2,X2), Res1 is X1, Res2 is X2.
+
+
+%---------------------------------------------------------------------
+% estimativa de doses por vacina dada
+estimativaPorVacinas(Tipo, Res) :- findall(Tipo, (vacinacao(_,_,D,M,A,Tipo,_), nao(jaPassou(D,M,A))), R), length(R, X), Res is X.
 
 % ---------------------------------------------------------------------
 % ---------------------------------------------------------------------
@@ -452,6 +480,7 @@ inserec(X,[H|T],[H|L]):- X > H, inserec(X,T,L).
 
 %---------------------------------------------------------------------
 % Ordena uma lista; ordena(lista de elementos, lista de elementos). -> {V,F}
+ordena([],[]).
 ordena([X],[X]).
 ordena([H|T],F):- ordena(T,N), inserec(H,N,F).
 
@@ -474,6 +503,12 @@ elemRemove(A,[X|Y],T) :- X \== A,
 % Extensao do meta-predicado nao: Questao -> {V,F}
 nao( Questao ) :- Questao, !, fail.
 nao( _ ).
+
+%---------------------------------------------------------------------
+% sistema de inferência que permite reconhecer se é V/F ou desconhecido
+si(Questao,verdadeiro) :- Questao.
+si(Questao,falso) :- -Questao.
+si(Questao,desconhecido) :- nao(Questao), nao(-Questao).
 
 %---------------------------------------------------------------------
 % Comparar duas datas. Data 1 + Data 2
