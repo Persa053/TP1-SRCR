@@ -75,6 +75,7 @@ centrosaude(20, 'Centro de Saúde de Barcelos', 'R. Dr. Abel Varzim, 4750-253 Ba
 %---------------------------------------------------------------------
 %staff: #Cstaff, #Idcentro, Nome, email ↝ { 𝕍, 𝔽 }
 
+%Base de conhecimento do staff
 staff(1, 1, 'Monica Sintra','monicas@gmail.com').
 staff(2, 1, 'Cristiano Alves', 'cristianoalves@gmail.com').
 staff(3, 1, 'Jorge Pires', 'jorgeemanuel@gmail.com').
@@ -117,6 +118,7 @@ staff(36, 20, 'Filipa Trindade', 'filipatrindade@gmail.com').
 %---------------------------------------------------------------------
 %vacinação_Covid: #Staf, #utente, Dia, Mes,Ano, Vacina, Toma↝ { 𝕍, 𝔽 }
 
+%Base de conhecimento da vacinação
 vacinacao(8,12,23,03,2021, pfizer, 1).
 vacinacao(24,8,01,04,2021, pfizer, 2).
 vacinacao(13,2,20,04,2021, pfizer, 1).
@@ -144,7 +146,7 @@ vacinacao(15,6,06,01,2021, pfizer, 1).
 %---------------------------------------------------------------------
 % medicoFamilia: #IdMedico,Nome,Idade,Género,#CentroSaude -> {V,F}
 
-
+%Base de conhecimento dos medicos
 medico(1,'Ester Domingues',47,'F',1).
 medico(2,'Manuel Castro',29,'M',2).
 medico(3,'Emanuel Anjo',38,'M',3).
@@ -175,6 +177,7 @@ medico(20,'Sara Carvalho',41,'F',20).
 %---------------------------------------------------------------------
 % enfermeiro: #IdEnfermeiro,Nome,Idade,Género,#CentroSaude -> {V,F}
 
+%Base de conhecimento dos enfermeiros
 enfermeiro(1,'Márcia Araujo',27,'F',1).
 enfermeiro(2,'Luzia Gomes',41,'F',2).
 enfermeiro(3,'Mafalda Araujo',50,'F',3).
