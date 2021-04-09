@@ -15,7 +15,7 @@
 :- use_module(conhecimento).
 
 % Data atual consoante o momento da utilização
-dataAtual(Dia, Mes, Ano) :- get_time(TS),
+dataA(Dia, Mes, Ano) :- get_time(TS),
                             stamp_date_time(TS,DateTime,'local'),
                             arg(3,DateTime,Dia),
                             arg(2,DateTime,Mes),
