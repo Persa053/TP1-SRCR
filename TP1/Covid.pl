@@ -469,3 +469,8 @@ elemRemove(A,[X|Y],T) :- X \== A,
 % Extensao do meta-predicado nao: Questao -> {V,F}
 nao( Questao ) :- Questao, !, fail.
 nao( _ ).
+
+%---------------------------------------------------------------------
+% Comparar duas datas. Data 1 + Data 2
+comparaDatas(D1,M1,A1,D2,M2,A2) :- D1 < D2, M1 =< M2, A1 =< A2.
+comparaDatas(D1,M1,A1,D2,M2,A2) :- D1 >= D2, M1 < M2, A1 =< A2.
