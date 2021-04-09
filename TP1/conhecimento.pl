@@ -6,7 +6,7 @@
 
 
 :- module(database,[ utente/9, centrosaude/5, staff/4, vacinacao/7, medico/5, enfermeiro/5]).
-:- dynamic utente/9.
+:- dynamic utente/10.
 :- dynamic centrosaude/5.
 :- dynamic staff/4.
 :- dynamic vacinacao/7.
