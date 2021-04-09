@@ -29,7 +29,7 @@ solucoesAux(R, R).
 
 
 % fase1Vacincacao: #IdEnfermeiro,Nome,Idade,Género,#CentroSaude -> {V,F}
-%1a fase 1 Vacinacao
+%Primeira fase 1 Vacinacao
 
 %Lista dos cenas para a primeira fase de Vacinacao (Uma ou mais doença fdd; >65 anos; Medicxs; Enfermeirxs)
 % Identifica utentes com uma ou mais Doenças; listaDoentesRiscoV(lista de IDs de utentes). -> {V,F}
