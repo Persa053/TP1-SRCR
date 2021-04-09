@@ -270,8 +270,8 @@ teste( [R|LR] ) :- R, teste( LR ).
                                       length(R, X), X==1).
                                       
 % Segunda toma ser depois da primeira------------------------------------------------------------------------------------------------------------------------------------------------------------
-+vacinacao(_,U,_,_,_,_,_) :: (findall((U, D1, M1, A1, D2, M2, A2), vacinacao(_,U,D1,M1,A1,_,1), vacinacao(_,U,D2,M2,A2,_,2), R),
-                                      length(R, X), X==2,
++vacinacao(_,U,D2,M2,A2,_,2) :: (findall((U, D1, M1, A1), vacinacao(_,U,D1,M1,A1,_,1), R),
+                                      length(R, X), X==1,
                                       comparaDatas(D1,M1,A1 , D2,M2,A2)).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
