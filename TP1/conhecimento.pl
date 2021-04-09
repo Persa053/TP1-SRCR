@@ -19,28 +19,28 @@
 %---------------------------------------------------------------------
 %Utente: #Idutente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde ↝ { 𝕍, 𝔽}
 
-utente(1, 087462728, 'Jose Oliveira',1965, 'joseoliv@gmail.com', 917263549, braga, engenheirx, [colestrol]),1.
-utente(2, 528102846, 'Diogo Espirito Santo',1956, 'diant@gmail.com', 936489367, coimbra, medicx, []),7.
-utente(3, 658746027, 'Afonso Castro', 1997, 'fonso@gmail.com', 927362918,braga, empresarix, [hipertensao]),2.
-utente(4, 129837465, 'Duarte Catalao', 1986, 'dudu@gmail.com', 918374526,lisboa, arquitetx,[osteoporose]),5.
-utente(5, 092183746, 'Lara Vilhena', 1996, 'laravilhena12@gmail.com', 9387362907, porto, modelo, []),8.
-utente(6, 394876938, 'Joao Silva', 1994, 'jonysilva@gmail.com', 912653829, guimaraes, futebolista, []),9.
-utente(7, 984735620, 'Maria Marques', 2000, 'marymar@gmail.com', 939273829, porto, estudante, []),26.
-utente(8, 093847568, 'Sofia Alves', 1998, 'sofsalves4@gmail.com', 918273648,lisboa, enfermeirx, []),20.
-utente(9, 498327462, 'Andre Pereira',1995, 'andregoper56@gmail.com', 928756401, porto, cozinheirx, [asma]),19.
-utente(10, 834768723, 'Rui Vilela', 2001, 'ruivilela@gmail.com', 935468937, barcelos, estudante, []),15.
-utente(11, 092134546, 'Veronica Pontes', 2000, 'veronica63@gmail.com', 918273648, guimaraes, estudante, []),3.
-utente(12, 398475394, 'Francisca Avila',1954, 'franciscavila@gmail.com', 938476032, braga, medicx, [alzheimer]),6.
-utente(13, 298374563, 'Pedro Gouveia', 1967, 'pedrogouveia@gmail.com', 928354082, lisboa, professorx, []),13.
-utente(14, 138473578, 'Sofia Alves', 1972, 'sofsalves4@gmail.com', 937485926, fafe, engenheirx, [diabetes]),1.
-utente(15, 578328474, 'Margarida Maia', 1988, 'margarida_m@gmail.com', 923457366, aveiro, terapeuta, [asma]),10.
-utente(16, 873645634, 'Ana Lopes', 1958, 'analopes@gmail.com', 912375648, braga, professor, [diabetes,rinite]),13.
-utente(17, 337462863, 'Dalila Pavao', 1965, 'dalilapavao@gmail.com', 937593746, porto, engenheirx, [parkinson]),14.
-utente(18, 163874673, 'Manuela Rodrigues', 1977, 'manuelarodrigues@gmail.com', 912847562, guimaraes, policia, []),20.
-utente(19, 098475833, 'Jose Soares', 1989, 'josesoaresvilela@gmail.com', 937264839, faro, padeirx, []),4.
-utente(20, 763487435, 'Luis Veloso', 1978, 'luisveloso@gmail.com', 927465839, aveiro, marinheirx, []),7.
-utente(21, 712345325, 'Alberto Sousa', 1800, 'als@gmail.com', 912344539, ruilhe, advogadx, []),2.
-utente(22, 347086589, 'Joao Baiao', 1930, 'joaos123@gmail.com', 915479768, braga, padeirx, []),22.
+utente(1, 087462728, 'Jose Oliveira',1965, 'joseoliv@gmail.com', 917263549, braga, engenheirx, [colestrol],1).
+utente(2, 528102846, 'Diogo Espirito Santo',1956, 'diant@gmail.com', 936489367, coimbra, medicx, [],7).
+utente(3, 658746027, 'Afonso Castro', 1997, 'fonso@gmail.com', 927362918,braga, empresarix, [hipertensao],2).
+utente(4, 129837465, 'Duarte Catalao', 1986, 'dudu@gmail.com', 918374526,lisboa, arquitetx,[osteoporose],5).
+utente(5, 092183746, 'Lara Vilhena', 1996, 'laravilhena12@gmail.com', 9387362907, porto, modelo, [],8).
+utente(6, 394876938, 'Joao Silva', 1994, 'jonysilva@gmail.com', 912653829, guimaraes, futebolista, [],9).
+utente(7, 984735620, 'Maria Marques', 2000, 'marymar@gmail.com', 939273829, porto, estudante, [],16).
+utente(8, 093847568, 'Sofia Alves', 1998, 'sofsalves4@gmail.com', 918273648,lisboa, enfermeirx, [],20).
+utente(9, 498327462, 'Andre Pereira',1995, 'andregoper56@gmail.com', 928756401, porto, cozinheirx, [asma],19).
+utente(10, 834768723, 'Rui Vilela', 2001, 'ruivilela@gmail.com', 935468937, barcelos, estudante, [],15).
+utente(11, 092134546, 'Veronica Pontes', 2000, 'veronica63@gmail.com', 918273648, guimaraes, estudante, [],3).
+utente(12, 398475394, 'Francisca Avila',1954, 'franciscavila@gmail.com', 938476032, braga, medicx, [alzheimer],6).
+utente(13, 298374563, 'Pedro Gouveia', 1967, 'pedrogouveia@gmail.com', 928354082, lisboa, professorx, [],13).
+utente(14, 138473578, 'Sofia Alves', 1972, 'sofsalves4@gmail.com', 937485926, fafe, engenheirx, [diabetes],1).
+utente(15, 578328474, 'Margarida Maia', 1988, 'margarida_m@gmail.com', 923457366, aveiro, terapeuta, [asma],10).
+utente(16, 873645634, 'Ana Lopes', 1958, 'analopes@gmail.com', 912375648, braga, professor, [diabetes,rinite],13).
+utente(17, 337462863, 'Dalila Pavao', 1965, 'dalilapavao@gmail.com', 937593746, porto, engenheirx, [parkinson],14).
+utente(18, 163874673, 'Manuela Rodrigues', 1977, 'manuelarodrigues@gmail.com', 912847562, guimaraes, policia, [],20).
+utente(19, 098475833, 'Jose Soares', 1989, 'josesoaresvilela@gmail.com', 937264839, faro, padeirx, [],4).
+utente(20, 763487435, 'Luis Veloso', 1978, 'luisveloso@gmail.com', 927465839, aveiro, marinheirx, [],7).
+utente(21, 712345325, 'Alberto Sousa', 1800, 'als@gmail.com', 912344539, ruilhe, advogadx, [],2).
+utente(22, 347086589, 'Joao Baiao', 1930, 'joaos123@gmail.com', 915479768, braga, padeirx, [],11).
 
 
 %---------------------------------------------------------------------
