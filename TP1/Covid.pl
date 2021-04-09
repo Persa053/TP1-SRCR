@@ -69,6 +69,7 @@ listafaseVacinacao2(IDs) :- findall(ID,(listafaseVacinacao1(Xs), utente(ID,_,_,_
 
 
 
+%utente(20, 763487435, 'Luis Veloso', 07-08-1978, 'luisveloso@gmail.com', 927465839, aveiro, marinheiro, []).
 %Utente: #Idutente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde ↝ { 𝕍, 𝔽}
 
 
@@ -260,7 +261,7 @@ teste( [R|LR] ) :- R, teste( LR ).
 +vacinacao(_,U,_,_,_,_,Toma) :: (findall((U, Toma), vacinacao(_,U,_,_,_,_,Toma), R),
                                       length(R, X), X==1).
 
-% funcao da joana <------------------------------------------------------------------------------------------ Veja aqui stor
+
 +vacinacao(_,U,_,_,_,Tipo,Toma) :: (Toma == 1;(findall((U, Tipo), vacinacao(_,U,_,_,_,Tipo,_), R),
                                       length(R, X), X==2)).
 
@@ -268,11 +269,11 @@ teste( [R|LR] ) :- R, teste( LR ).
 +vacinacao(S,U,_,_,_,_,_) :: (findall((U, S, Cs), (utente(U,_,_,_,_,_,_,_,_,Cs), staff(S,Cs,_,_)), R),
                                       length(R, X), X==1).
                                       
-% Segunda toma ser depois da primeira------------------------------------------------------------------------------------------------------------------------------------------------------------
-+vacinacao(_,U,D2,M2,A2,_,2) :: (findall((U, D1, M1, A1), vacinacao(_,U,D1,M1,A1,_,1), R),
-                                      length(R, X), X==1,
-                                      comparaDatas(D1,M1,A1 , D2,M2,A2)).
-
+% Segunda toma ser depois da primeira.
++vacinacao(_,Utente,Dia2,Mes2,Ano2,_,Toma) :: 
+                    (Toma == 1;(vacinacao(_,Utente,Dia1,Mes1,Ano1,_,1),
+                     Toma == 2,comparaDatas(Dia1,Mes1,Ano1,Dia2,Mes2,Ano2))).
+                                
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Faz a removoção de conhecimento
 % Extensão predicado que permite a involucao conhecimento: Termo - {V,F}
@@ -476,5 +477,6 @@ nao( _ ).
 
 %---------------------------------------------------------------------
 % Comparar duas datas. Data 1 + Data 2
-comparaDatas(D1,M1,A1,D2,M2,A2) :- D1 < D2, M1 =< M2, A1 =< A2.
-comparaDatas(D1,M1,A1,D2,M2,A2) :- D1 >= D2, M1 < M2, A1 =< A2.
+comparaDatas(_,_,A1,_,_,A2) :- A1 < A2.
+comparaDatas(_,M1,A1,_,M2,A2) :- M1 =< M2, A1 =:= A2.
+comparaDatas(D1,M1,A1,D2,M2,A2) :- D1 =< D2, M1 =:= M2, A1 =:= A2.

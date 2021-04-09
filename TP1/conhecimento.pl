@@ -27,11 +27,11 @@ utente(4, 129837465, 'Duarte Catalao', 1986, 'dudu@gmail.com', 918374526,lisboa,
 utente(5, 092183746, 'Lara Vilhena', 1996, 'laravilhena12@gmail.com', 9387362907, porto, modelo, [],8).
 utente(6, 394876938, 'Joao Silva', 1994, 'jonysilva@gmail.com', 912653829, guimaraes, futebolista, [],9).
 utente(7, 984735620, 'Maria Marques', 2000, 'marymar@gmail.com', 939273829, porto, estudante, [],16).
-utente(8, 093847568, 'Sofia Alves', 1998, 'sofsalves4@gmail.com', 918273648,lisboa, enfermeirx, [],20).
+utente(8, 093847568, 'Sofia Alves', 1998, 'sofsalves4@gmail.com', 918273648,lisboa, enfermeirx, [],6).
 utente(9, 498327462, 'Andre Pereira',1995, 'andregoper56@gmail.com', 928756401, porto, cozinheirx, [asma],19).
 utente(10, 834768723, 'Rui Vilela', 2001, 'ruivilela@gmail.com', 935468937, barcelos, estudante, [],15).
 utente(11, 092134546, 'Veronica Pontes', 2000, 'veronica63@gmail.com', 918273648, guimaraes, estudante, [],3).
-utente(12, 398475394, 'Francisca Avila',1954, 'franciscavila@gmail.com', 938476032, braga, medicx, [alzheimer],6).
+utente(12, 398475394, 'Francisca Avila',1954, 'franciscavila@gmail.com', 938476032, braga, medicx, [alzheimer],3).
 utente(13, 298374563, 'Pedro Gouveia', 1967, 'pedrogouveia@gmail.com', 928354082, lisboa, professorx, [],13).
 utente(14, 138473578, 'Sofia Alves', 1972, 'sofsalves4@gmail.com', 937485926, fafe, engenheirx, [diabetes],1).
 utente(15, 578328474, 'Margarida Maia', 1988, 'margarida_m@gmail.com', 923457366, aveiro, terapeuta, [asma],10).
@@ -52,7 +52,7 @@ utente(22, 347086589, 'Joao Baiao', 1930, 'joaos123@gmail.com', 915479768, braga
 %Base de conhecimento dos Centros de Saúde 
 centrosaude(1, 'Centro de Saúde de Braga', 'Largo Paulo Orósio, 4700-031 Braga', 253928647, 'csbraga@gmail.com').
 centrosaude(2, 'USF Bracara Augusta', 'Praça Gen. Humberto Delgado 47, 4715-213 Braga', 253964876, 'bracaraaugusta@gmail.com').
-centrosaude(3, 'USF Sanus Caranda', 'R. André Soares 25, 4715-213 Braga', 253201530, 'usfcaranda@gmail.com'),2.
+centrosaude(3, 'USF Sanus Caranda', 'R. André Soares 25, 4715-213 Braga', 253201530, 'usfcaranda@gmail.com').
 centrosaude(4, 'Centro de Saúde de Guimarães', 'R. Francisco Santos Guimarães, 4810-225 Guimarães', 253519923, 'csguimaraes@gmail.com').
 centrosaude(5, 'Centro de Saude Amorosa', 'R. José Pinto Rodrigues 16, Guimarães, 4810-225 Guimarães', 253421340, 'csamorosa@gmail.com').
 centrosaude(6, 'Unidade de Saúde Familiar Cruz de Celas', 'Av. Dom Afonso Henriques 141, 3000-011 Coimbra', 239488261, 'usfcelas@gmail.com').
