@@ -304,6 +304,14 @@ remocao( Termo ) :- retract( Termo ).
 remocao( Termo ) :- assert( Termo ),!,fail.
 
 
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Predicados para remover utentes, centros de saúde, staff e vacinações
+remover_utente(A,B,C,D,E,F,G,H,I,J) :- involucao(utente(A,B,C,D,E,F,G,H,I,J)).
+remover_centroSaude(A,B,C,D,E) :- involucao(centrosaude(A,B,C,D,E)).
+remover_staff(A,B,C,D) :- involucao(staff(A,B,C,D)).
+remover_vacinacao(A,B,C,D,E,F,G) :- involucao(vacinacao(A,B,C,D,E,F,G)).
+
+
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas vacinadas com a 1a dose; peepsVac1Time(Lista de IDs de utentes). -> {V,F}
 peepsVac1Time(R) :- findall(ID,
