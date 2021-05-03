@@ -10,8 +10,20 @@
 :- set_prolog_flag( unknown,fail ).
 :- set_prolog_flag( answer_write_options,[max_depth(0)] ).
 
-:- op( 900,xfy,'::' ).
+:- op(900, xfy, '::').
+:- op(996, xfy, '&&' ).
+:- op(997, xfy, '$$' ).
+:- op(998, xfx, '=>' ).
+:- op(999, xfx, '<=>' ).
 :- dynamic faseVacinacao/2.
+:- dynamic excecao/1.
+:- dynamic nulo/1.
+:- dynamic incerto/2.
+:- dynamic interdito/2.
+:- dynamic impreciso/2.
+:- dynamic incertoVacinacao/4.
+:- dynamic interditoVacinacao/4.
+:- dynamic imprecisoVacinacao/4.
 :- use_module(conhecimento).
 
 % Data atual consoante o momento da utilização
@@ -311,6 +323,67 @@ remover_centroSaude(A,B,C,D,E) :- involucao(centrosaude(A,B,C,D,E)).
 remover_staff(A,B,C,D) :- involucao(staff(A,B,C,D)).
 remover_vacinacao(A,B,C,D,E,F,G) :- involucao(vacinacao(A,B,C,D,E,F,G)).
 
+% remocao de conhecimento incerto
+removeIncerto(IdUt,utente) :-
+        incerto(IdUt,utente),
+        remocao(incerto(IdUt,utente)).
+removeIncerto(IdUt,utente).
+
+removeIncerto(A,B,C,D,E,vacinacao) :-
+        incertoVacinacao(A,B,C,D,E,vacinacao),
+        remocao(incertoVacinacao(A,B,C,D,E,vacinacao)).
+removeIncerto(A,B,C,D,E,vacinacao).
+
+removeIncerto(Id,staff) :-
+        incerto(Id,staff),
+        remocao(incerto(Id,staff)).
+removeIncerto(Id,staff).
+
+removeIncerto(Id,centrosaude) :-
+        incerto(Id,centrosaude),
+        remocao(incerto(Id,centrosaude)).
+removeIncerto(Id,centrosaude).
+
+removeIncerto(Id,medico) :-
+        incerto(Id,medico),
+        remocao(incerto(Id,medico)).
+removeIncerto(Id,medico).
+
+removeIncerto(Id,enfermeiro) :-
+        incerto(Id,enfermeiro),
+        remocao(incerto(Id,enfermeiro)).
+removeIncerto(Id,enfermeiro).
+
+% remocao de conhecimento interdito
+removeInterdito(Id,utente) :-
+        interdito(Id,utente),
+        remocao(interdito(Id,utente)).
+removeInterdito(Id,utente).
+
+removeInterdito(A,B,C,D,E,vacinacao) :-
+        interditoVacinacao(A,B,C,D,E,vacinacao),
+        remocao(interditoVacinacao(A,B,C,D,E,vacinacao)).
+removeInterdito(A,B,C,D,E,vacinacao).
+
+removeInterdito(Id,staff) :-
+        interdito(Id,staff),
+        remocao(interdito(Id,staff)).
+removeInterdito(Id,staff).
+
+removeInterdito(Id,centrosaude) :-
+        interdito(Id,centrosaude),
+        remocao(interdito(Id,centrosaude)).
+removeInterdito(Id,centrosaude).
+
+removeInterdito(Id,medico) :-
+        interdito(Id,medico),
+        remocao(interdito(Id,medico)).
+removeInterdito(Id,medico).
+
+removeInterdito(Id,enfermeiro) :-
+        interdito(Id,enfermeiro),
+        remocao(interdito(Id,enfermeiro)).
+removeInterdito(Id,enfermeiro).
 
 %---------------------------------------------------------------------
 % Identificar IDs de pessoas vacinadas com a 1a dose; peepsVac1Time(Lista de IDs de utentes). -> {V,F}
@@ -442,6 +515,195 @@ calculaDosesFuturas(Res1,Res2) :- peepsVac1Futura(R1), peepsVac2Futura(R2), leng
 % estimativa de doses futuras por vacina dada
 estimativaPorVacinas(Tipo, Res) :- findall(Tipo, (vacinacao(_,_,D,M,A,Tipo,_), nao(jaPassou(D,M,A))), R), length(R, X), Res is X.
 
+%---------------------------------------------------------------------
+% Extensao do meta-predicado nao: Questao -> {V,F}
+nao( Questao ) :- Questao, !, fail.
+nao( _ ).
+
+%---------------------------------------------------------------------
+% sistema de inferência que permite reconhecer se é V/F ou desconhecido
+si(Questao,verdadeiro) :- Questao.
+si(Questao,falso) :- -Questao.
+si(Questao,desconhecido) :- nao(Questao), nao(-Questao).
+
+% meta-redicado conjuncao:
+% Q1, Q2, Resposta -> {V,F, D}
+conjuncao( verdadeiro, verdadeiro, verdadeiro ).
+conjuncao( falso, _, falso ).
+conjuncao( _, falso, falso ).
+conjuncao( desconhecido, verdadeiro, desconhecido ).
+conjuncao( V, desconhecido, desconhecido ) :- V \= falso.
+
+% meta-redicado disjuncao:
+% Q1, Q2, Resposta -> {V,F, D}
+disjuncao( verdadeiro, _, verdadeiro ).
+disjuncao( _, verdadeiro, verdadeiro ).
+disjuncao( desconhecido, V, desconhecido ) :- V \= verdadeiro.
+disjuncao( V, desconhecido, desconhecido ) :- V \= verdadeiro.
+disjuncao( falso, falso, falso ).
+
+% meta-predicado siLista:
+% Lista de questoes, Lista de respostas -> {V,F, D}
+siLista([],[]).
+siLista([Q|T],[R|S]) :- si(Q,R), siLista(T,S).
+
+% meta-predicado siComposicao
+% Composicao de questoes, esposta -> {V,F, D}
+siComposto(Q && C, R) :- si(Q,RQ), siComposto(C,RC), conjuncao(RQ,RC,R).
+siComposto(Q $$ C, R) :- si(Q,RQ), siComposto(C,RC), disjuncao(RQ,RC,R).
+siComposto(Q, R) :- si(Q,R).
+
+%--------------------------------------------------------
+% --------------- Invariantes de involução --------------
+% -------------------------------------------------------
+% -------------------------------------------------------
+
+% Pressupostos do mundo fechado
+-Q :- nao(Q), nao(excecao(Q)).
+
+% ------------------------------------------------------
+% --------------- Conhecimento Incerto -----------------
+% ------------------------------------------------------
+excecao(utente(Id,_,N,Dt,E,Tlf,M,P,DC,Cs)):- utente(Id,desconhecido,N,Dt,E,Tlf,M,P,DC,Cs).
+excecao(utente(Id,Ss,_,Dt,E,Tlf,M,P,DC,Cs)):- utente(Id,Ss,desconhecido,Dt,E,Tlf,M,P,DC,Cs).
+excecao(utente(Id,Ss,N,_,E,Tlf,M,P,DC,Cs)):- utente(Id,Ss,N,desconhecido,E,Tlf,M,P,DC,Cs).
+excecao(utente(Id,Ss,N,Dt,_,Tlf,M,P,DC,Cs)):- utente(Id,Ss,N,Dt,desconhecido,Tlf,M,P,DC,Cs).
+excecao(utente(Id,Ss,N,Dt,E,_,M,P,DC,Cs)):- utente(Id,Ss,N,Dt,E,desconhecido,M,P,DC,Cs).
+excecao(utente(Id,Ss,N,Dt,E,Tlf,_,P,DC,Cs)):- utente(Id,Ss,N,Dt,E,Tlf,desconhecido,P,DC,Cs).
+excecao(utente(Id,Ss,N,Dt,E,Tlf,M,_,DC,Cs)):- utente(Id,Ss,N,Dt,E,Tlf,M,desconhecido,DC,Cs).
+excecao(utente(Id,Ss,N,Dt,E,Tlf,M,P,_,Cs)):- utente(Id,Ss,N,Dt,E,Tlf,M,P,desconhecido,Cs).
+excecao(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,_)):- utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,desconhecido).
+
+excecao(centrosaude(Id,_,M,Tlf,E)) :- centrosaude(Id,desconhecido,M,Tlf,E).
+excecao(centrosaude(Id,N,_,Tlf,E)) :- centrosaude(Id,N,desconhecido,Tlf,E).
+excecao(centrosaude(Id,N,M,_,E)) :- centrosaude(Id,N,M,desconhecido,E).
+excecao(centrosaude(Id,N,M,Tlf,_)) :- centrosaude(Id,N,M,Tlf,desconhecido).
+
+excecao(staff(Id,_,N,E)) :- staff(Id,desconhecido,N,E).
+excecao(staff(Id,Cs,_,E)) :- staff(Id,Cs,desconhecido,E).
+excecao(staff(Id,Cs,N,_)) :- staff(Id,Cs,N,desconhecido).
+
+excecao(enfermeiro(Id,_,I,G,Cs)) :- enfermeiro(Id,desconhecido,I,G,Cs).
+excecao(enfermeiro(Id,N,_,G,Cs)) :- enfermeiro(Id,N,desconhecido,G,Cs).
+excecao(enfermeiro(Id,N,I,_,Cs)) :- enfermeiro(Id,N,I,desconhecido,Cs).
+excecao(enfermeiro(Id,N,I,G,_)) :- enfermeiro(Id,N,I,G,desconhecido).
+
+excecao(medico(Id,_,I,G,Cs)) :- medico(Id,desconhecido,I,G,Cs).
+excecao(medico(Id,N,_,G,Cs)) :- medico(Id,N,desconhecido,G,Cs).
+excecao(medico(Id,N,I,_,Cs)) :- medico(Id,N,I,desconhecido,Cs).
+excecao(medico(Id,N,I,G,_)) :- medico(Id,N,I,G,desconhecido).
+
+excecao(vacinacao(_,B,C,D,E,F,G)) :- vacinacao(desconhecido,B,C,D,E,F,G).
+excecao(vacinacao(A,_,C,D,E,F,G)) :- vacinacao(A,desconhecido,C,D,E,F,G).
+excecao(vacinacao(A,B,_,D,E,F,G)) :- vacinacao(A,B,desconhecido,D,E,F,G).
+excecao(vacinacao(A,B,C,_,E,F,G)) :- vacinacao(A,B,C,desconhecido,E,F,G).
+excecao(vacinacao(A,B,C,D,_,F,G)) :- vacinacao(A,B,C,D,desconhecido,F,G).
+excecao(vacinacao(A,B,C,D,E,_,G)) :- vacinacao(A,B,C,D,E,desconhecido,G).
+excecao(vacinacao(A,B,C,D,E,F,_)) :- vacinacao(A,B,C,D,E,F,desconhecido).
+
+% ------------------------------------------------------
+% -------------- Conhecimento Impreciso ----------------
+% ------------------------------------------------------
+% Dúvida sobre o nome do utente e morada cujo identificador é 23.
+excecao(utente(23, 984735620, 'Maria Marques', 2000, 'marymar@gmail.com', 939273829, porto, estudante, [],16)).
+excecao(utente(23, 984735620, 'Maria Marques', 2000, 'marymar@gmail.com', 939273829, braga, estudante, [],16)).
+excecao(utente(23, 984735620, 'Mario Marques', 2000, 'marymar@gmail.com', 939273829, porto, estudante, [],16)).
+excecao(utente(23, 984735620, 'Mario Marques', 2000, 'marymar@gmail.com', 939273829, braga, estudante, [],16)).
+impreciso(23, utente).
+
+% Dúvida sobre a profissão do utente, cujo identificador é 24.
+excecao(utente(24, 984735620, 'Maria Abelha', 1990, 'mariabel@gmail.com', 123566778, porto, estudante, [],20)).
+excecao(utente(24, 984735620, 'Maria Abelha', 1990, 'mariabel@gmail.com', 123566778, braga, revendedora, [],20)).
+impreciso(24, utente).
+
+% Duvida sobre o telefone associado a um centro de saúde cujo identificador é 21.
+excecao(centrosaude(21, 'Centro de Saúde de Ruães', 'R. de Ruães, 4700-565 Mire de Tibães', 253602490, 'csruaes@gmail.com')).
+excecao(centrosaude(21, 'Centro de Saúde de Ruães', 'R. de Ruães, 4700-565 Mire de Tibães', 253602400, 'csruaes@gmail.com')).
+impreciso(21, centrosaude).
+
+% Duvida sobre o nome do staff cujo identificador é 37.
+excecao(staff(37, 25, 'Tiago Borges', 'tiagoborges@gmail.com')).
+excecao(staff(37, 25, 'Tiago Rodrigues', 'tiagoborges@gmail.com')).
+impreciso(37, staff).
+
+% Duvida sobre a idade do enfermeiro cujo identificador é 21.
+excecao(enfermeiro(21,'Sousa Tavares',45,'F',20)).
+excecao(enfermeiro(21,'Sousa Tavares',39,'F',20)).
+impreciso(21, enfermeiro).
+
+% Duvida sobre o centro de saude e a idade do medico cujo identificador é 21.
+excecao(medico(21,'Borges Carvalho',41,'F',19)).
+excecao(medico(21,'Borges Carvalho',41,'F',20)).
+excecao(medico(21,'Borges Carvalho',45,'F',19)).
+excecao(medico(21,'Borges Carvalho',45,'F',20)).
+impreciso(21, medico).
+
+% Duvida sobre o tipo da vacinacao.
+excecao(vacinacao(25,13,29,06,2021, astraZeneca, 2)).
+imprecisoVacinacao(25,13,29,06,2021, vacinacao).
+
+% Duvida sobre a toma da vacinacao.
+excecao(vacinacao(25,13,29,06,2021, pfizer, 1)).
+imprecisoVacinacao(25,13,29,06,2021, vacinacao).
+
+% ------------------------------------------------------
+% -------------- Conhecimento Interdito ----------------
+% ------------------------------------------------------
+excecao(utente(Id,_,N,Dt,E,Tlf,M,P,DC,Cs)):- utente(Id,semSegurancaSocial,N,Dt,E,Tlf,M,P,DC,Cs).
+excecao(utente(Id,Ss,_,Dt,E,Tlf,M,P,DC,Cs)):- utente(Id,Ss,semNome,Dt,E,Tlf,M,P,DC,Cs).
+excecao(utente(Id,Ss,N,_,E,Tlf,M,P,DC,Cs)):- utente(Id,Ss,N,semIdade,E,Tlf,M,P,DC,Cs).
+excecao(utente(Id,Ss,N,Dt,_,Tlf,M,P,DC,Cs)):- utente(Id,Ss,N,Dt,semEmail,Tlf,M,P,DC,Cs).
+excecao(utente(Id,Ss,N,Dt,E,_,M,P,DC,Cs)):- utente(Id,Ss,N,Dt,E,semTelefone,M,P,DC,Cs).
+excecao(utente(Id,Ss,N,Dt,E,Tlf,_,P,DC,Cs)):- utente(Id,Ss,N,Dt,E,Tlf,semMorada,P,DC,Cs).
+excecao(utente(Id,Ss,N,Dt,E,Tlf,M,_,DC,Cs)):- utente(Id,Ss,N,Dt,E,Tlf,M,semProfissao,DC,Cs).
+excecao(utente(Id,Ss,N,Dt,E,Tlf,M,P,_,Cs)):- utente(Id,Ss,N,Dt,E,Tlf,M,P,semDoencasCronicas,Cs).
+excecao(utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,_)):- utente(Id,Ss,N,Dt,E,Tlf,M,P,DC,semCentroSaude).
+
+excecao(centrosaude(Id,_,M,Tlf,E)) :- centrosaude(Id,semNome,M,Tlf,E).
+excecao(centrosaude(Id,N,_,Tlf,E)) :- centrosaude(Id,N,semMorada,Tlf,E).
+excecao(centrosaude(Id,N,M,_,E)) :- centrosaude(Id,N,M,semTelefone,E).
+excecao(centrosaude(Id,N,M,Tlf,_)) :- centrosaude(Id,N,M,Tlf,semEmail).
+
+excecao(staff(Id,_,N,E)) :- staff(Id,semCentroSaude,N,E).
+excecao(staff(Id,Cs,_,E)) :- staff(Id,Cs,semNome,E).
+excecao(staff(Id,Cs,N,_)) :- staff(Id,Cs,N,semEmail).
+
+excecao(enfermeiro(Id,_,I,G,Cs)) :- enfermeiro(Id,semNome,I,G,Cs).
+excecao(enfermeiro(Id,N,_,G,Cs)) :- enfermeiro(Id,N,semIdade,G,Cs).
+excecao(enfermeiro(Id,N,I,_,Cs)) :- enfermeiro(Id,N,I,semGenero,Cs).
+excecao(enfermeiro(Id,N,I,G,_)) :- enfermeiro(Id,N,I,G,semCentroSaude).
+
+excecao(medico(Id,_,I,G,Cs)) :- medico(Id,semNome,I,G,Cs).
+excecao(medico(Id,N,_,G,Cs)) :- medico(Id,N,semIdade,G,Cs).
+excecao(medico(Id,N,I,_,Cs)) :- medico(Id,N,I,semGenero,Cs).
+excecao(medico(Id,N,I,G,_)) :- medico(Id,N,I,G,semCentroSaude).
+
+excecao(vacinacao(_,B,C,D,E,F,G)) :- vacinacao(semStaff,B,C,D,E,F,G).
+excecao(vacinacao(A,_,C,D,E,F,G)) :- vacinacao(A,semUtente,C,D,E,F,G).
+excecao(vacinacao(A,B,_,D,E,F,G)) :- vacinacao(A,B,semDia,D,E,F,G).
+excecao(vacinacao(A,B,C,_,E,F,G)) :- vacinacao(A,B,C,semMes,E,F,G).
+excecao(vacinacao(A,B,C,D,_,F,G)) :- vacinacao(A,B,C,D,semAno,F,G).
+excecao(vacinacao(A,B,C,D,E,_,G)) :- vacinacao(A,B,C,D,E,semTipoVacina,G).
+excecao(vacinacao(A,B,C,D,E,F,_)) :- vacinacao(A,B,C,D,E,F,semToma).
+
+nulo(semIdade).
+nulo(semMorada).
+nulo(semAno).
+nulo(semMes).
+nulo(semDia).
+nulo(semSegurancaSocial).
+nulo(semNome).
+nulo(semTelefone).
+nulo(semEmail).
+nulo(semProfissao).
+nulo(semDoencasCronicas).
+nulo(semCentroSaude).
+nulo(semGenero).
+nulo(semStaff).
+nulo(semUtente).
+nulo(semTipoVacina).
+nulo(semToma).
+
 % ---------------------------------------------------------------------
 % ---------------------------------------------------------------------
 % --------------------------- Auxiliares ------------------------------
@@ -507,23 +769,17 @@ repRemove([X|A],R) :- elemRemove(X,A,L),
                       R = [X|T].
 
 %---------------------------------------------------------------------
+% Remove todos os elems; removeAll(lista de elementos). -> {V,F}
+removeAll([H|T]):- remove(H), removeAll(T).
+removeAll([]).              
+
+%---------------------------------------------------------------------
 % Remove a primeira ocurrencia de um elem numa lista; elemRemove(elemento, lista de elementos, lista de elementos). -> {V,F}
 elemRemove(_,[],[]).
 elemRemove(A,[A|Y],T) :- elemRemove(A,Y,T).
 elemRemove(A,[X|Y],T) :- X \== A,
                          elemRemove(A,Y,R),
                       	 T = [X|R].
-
-%---------------------------------------------------------------------
-% Extensao do meta-predicado nao: Questao -> {V,F}
-nao( Questao ) :- Questao, !, fail.
-nao( _ ).
-
-%---------------------------------------------------------------------
-% sistema de inferência que permite reconhecer se é V/F ou desconhecido
-si(Questao,verdadeiro) :- Questao.
-si(Questao,falso) :- -Questao.
-si(Questao,desconhecido) :- nao(Questao), nao(-Questao).
 
 %---------------------------------------------------------------------
 % Comparar duas datas. Data 1 + Data 2
