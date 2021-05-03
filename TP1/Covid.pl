@@ -2,7 +2,7 @@
 % SIST. REPR. CONHECIMENTO E RACIOCINIO - MiEI/3ºAno
 
 %---------------------------------------------------------------------
-% TRABALHO PRÁTICO: PARTE 1    2020/2021
+% TRABALHO PRÁTICO: PARTE 2    2020/2021
 
 %---------------------------------------------------------------------
 :- set_prolog_flag( discontiguous_warnings,off ).
@@ -186,13 +186,19 @@ enfermeiroCservico(Cs, R) :- solucoes(enfermeiro(Id,N,I,G,Cs), enfermeiro(Id,N,I
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Faz a insercao de conhecimento
+% Faz a insercao e remocao de conhecimento
 % Extensao predicado que permite a evolucao conhecimento: Termo - {V,F}
 
 evolucao( Termo ) :- findall(Invariante, +Termo::Invariante, Lista),
                      insercao( Termo ),
                      teste( Lista ).
 
+% Extensao predicado que permite a involucao conhecimento: Termo - {V,F}
+
+involucao(Termo) :- findall(Invariante, -Termo::Invariante, Lista),
+                    remocao(Termo).
+
+remocao(X) :- retract(X).
 insercao( Termo ) :- assert( Termo ).
 insercao( Termo ) :- retract( Termo ), !, fail.
 
