@@ -193,12 +193,6 @@ evolucao( Termo ) :- findall(Invariante, +Termo::Invariante, Lista),
                      insercao( Termo ),
                      teste( Lista ).
 
-% Extensao predicado que permite a involucao conhecimento: Termo - {V,F}
-
-involucao(Termo) :- findall(Invariante, -Termo::Invariante, Lista),
-                    remocao(Termo).
-
-remocao(X) :- retract(X).
 insercao( Termo ) :- assert( Termo ).
 insercao( Termo ) :- retract( Termo ), !, fail.
 
